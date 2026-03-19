@@ -9,11 +9,11 @@ hero:
       text: Starter 文件
       link: /starters/
     - theme: alt
-      text: 開發日誌
-      link: /guide/01-架構設計與PoC驗證
-    - theme: alt
-      text: Showcase
+      text: Showcase 後端
       link: /showcase/
+    - theme: alt
+      text: Showcase 前端
+      link: /frontend/
 
 features:
   - icon: 🔐
