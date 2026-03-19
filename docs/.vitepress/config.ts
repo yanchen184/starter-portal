@@ -4,6 +4,7 @@ export default defineConfig({
   title: 'Company Starters',
   description: '公司共用 Spring Boot Starter 文件入口',
   lang: 'zh-TW',
+  base: '/starter-portal/',
   ignoreDeadLinks: true,
 
   themeConfig: {
