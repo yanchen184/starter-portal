@@ -1,0 +1,67 @@
+/* 主色調 — 從預設紫色改為專業藍綠 */
+:root {
+  --vp-c-brand-1: #10b981;
+  --vp-c-brand-2: #059669;
+  --vp-c-brand-3: #047857;
+  --vp-c-brand-soft: rgba(16, 185, 129, 0.14);
+  --vp-home-hero-name-color: transparent;
+  --vp-home-hero-name-background: linear-gradient(135deg, #10b981 0%, #3b82f6 100%);
+  --vp-home-hero-image-background-image: linear-gradient(135deg, rgba(16, 185, 129, 0.2) 0%, rgba(59, 130, 246, 0.2) 100%);
+  --vp-home-hero-image-filter: blur(56px);
+}
+
+.dark {
+  --vp-c-brand-1: #34d399;
+  --vp-c-brand-2: #10b981;
+  --vp-c-brand-3: #059669;
+  --vp-c-brand-soft: rgba(52, 211, 153, 0.14);
+}
+
+/* Hero 區域美化 */
+.VPHero .name {
+  font-size: 48px !important;
+  letter-spacing: -1px;
+}
+
+.VPHero .text {
+  font-size: 20px !important;
+  max-width: 560px;
+}
+
+.VPHero .tagline {
+  font-size: 16px !important;
+  opacity: 0.8;
+}
+
+/* Feature 卡片美化 */
+.VPFeature {
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.VPFeature:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+.dark .VPFeature:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+/* Feature icon 大一點 */
+.VPFeature .icon {
+  font-size: 28px;
+}
+
+/* 版本資訊表格美化 */
+.vp-doc table {
+  margin-top: 24px;
+}
+
+.vp-doc th {
+  background: var(--vp-c-bg-soft);
+}
+
+/* Footer 美化 */
+.VPFooter .message {
+  opacity: 0.6;
+}

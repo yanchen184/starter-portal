@@ -23,7 +23,11 @@ find_readmes() {
   local repo=$1
   local branch=$2
   local encoded_branch=$(echo "$branch" | sed 's|/|%2F|g')
-  curl -s "https://api.github.com/repos/$GITHUB_USER/$repo/git/trees/$encoded_branch?recursive=1" \
+  local auth_header=""
+  if [ -n "$GITHUB_TOKEN" ]; then
+    auth_header="-H \"Authorization: token $GITHUB_TOKEN\""
+  fi
+  eval curl -s $auth_header "https://api.github.com/repos/$GITHUB_USER/$repo/git/trees/$encoded_branch?recursive=1" \
     | python3 -c "
 import sys, json
 data = json.load(sys.stdin)
@@ -43,7 +47,11 @@ download_file() {
 
   mkdir -p "$(dirname "$dest")"
   local url="https://raw.githubusercontent.com/$GITHUB_USER/$repo/$branch/$src"
-  local status=$(curl -s -o "$dest" -w "%{http_code}" "$url")
+  local auth_opts=""
+  if [ -n "$GITHUB_TOKEN" ]; then
+    auth_opts="-H \"Authorization: token $GITHUB_TOKEN\""
+  fi
+  local status=$(eval curl -s $auth_opts -o "$dest" -w "%{http_code}" "$url")
 
   if [ "$status" = "200" ]; then
     return 0
@@ -138,39 +146,38 @@ echo ""
 echo "--- Generating version info ---"
 
 # 取得各 repo 的最後 commit 時間
-python3 << 'PYEOF'
-import json, urllib.request, datetime
+generate_version_info() {
+  local output="docs/version-info.md"
+  local auth_header=""
+  if [ -n "$GITHUB_TOKEN" ]; then
+    auth_header="-H \"Authorization: token $GITHUB_TOKEN\""
+  fi
 
-user = "yanchen184"
-repos = [
-    ("company-common-starters", "main", "Starters BOM"),
-    ("starter-showcase", "feature/response-starter", "Showcase 後端"),
-    ("security-starter-demo-frontend", "master", "Showcase 前端"),
-]
+  echo "## 版本資訊" > "$output"
+  echo "" >> "$output"
+  echo "| 模組 | 版本 | 最後更新 | 最近改動 |" >> "$output"
+  echo "|------|------|---------|--------|" >> "$output"
 
-rows = []
-for repo, branch, label in repos:
-    try:
-        url = f"https://api.github.com/repos/{user}/{repo}/commits/{branch}"
-        req = urllib.request.Request(url, headers={"Accept": "application/vnd.github.v3+json"})
-        data = json.loads(urllib.request.urlopen(req, timeout=10).read())
-        date = data["commit"]["committer"]["date"][:10]
-        msg = data["commit"]["message"].split("\n")[0][:60]
-        rows.append(f"| {label} | `1.0.0` | {date} | {msg} |")
-    except Exception as e:
-        rows.append(f"| {label} | `1.0.0` | - | fetch failed |")
+  local items=(
+    "company-common-starters:main:Starters BOM"
+    "starter-showcase:feature/response-starter:Showcase 後端"
+    "security-starter-demo-frontend:master:Showcase 前端"
+  )
 
-# 寫入 version info markdown
-with open("docs/version-info.md", "w") as f:
-    f.write("## 版本資訊\n\n")
-    f.write("| 模組 | 版本 | 最後更新 | 最近改動 |\n")
-    f.write("|------|------|---------|--------|\n")
-    for row in rows:
-        f.write(row + "\n")
-    f.write(f"\n> 文件同步時間：{datetime.datetime.now().strftime('%Y-%m-%d %H:%M')}\n")
+  for item in "${items[@]}"; do
+    IFS=':' read -r repo branch label <<< "$item"
+    local encoded=$(echo "$branch" | sed 's|/|%2F|g')
+    local json=$(eval curl -s $auth_header "https://api.github.com/repos/$GITHUB_USER/$repo/commits/$encoded")
+    local date=$(echo "$json" | python3 -c "import sys,json; print(json.load(sys.stdin)['commit']['committer']['date'][:10])" 2>/dev/null || echo "-")
+    local msg=$(echo "$json" | python3 -c "import sys,json; print(json.load(sys.stdin)['commit']['message'].split(chr(10))[0][:50])" 2>/dev/null || echo "-")
+    echo "| $label | \`1.0.0\` | $date | $msg |" >> "$output"
+  done
 
-print("  version-info.md generated")
-PYEOF
+  echo "" >> "$output"
+  echo "> 文件同步時間：$(date '+%Y-%m-%d %H:%M')" >> "$output"
+  echo "  version-info.md generated"
+}
+generate_version_info
 
 echo ""
 echo "=== Sync complete ==="

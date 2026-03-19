@@ -30,6 +30,8 @@ jobs:
         run: npm ci
 
       - name: Sync docs from repos
+        env:
+          GITHUB_TOKEN: ${{ secrets.PORTAL_SYNC_TOKEN }}
         run: bash scripts/sync-docs.sh
 
       - name: Check for changes
