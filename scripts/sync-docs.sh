@@ -98,9 +98,8 @@ for entry in "${REPOS[@]}"; do
 
   echo "  Found $(echo "$readmes" | wc -l | tr -d ' ') README(s)"
 
-  # 收集 sidebar items
-  sidebar_items=""
-  first_item=true
+  # 收集所有 items
+  all_items=""
 
   while IFS= read -r readme; do
     [ -z "$readme" ] && continue
@@ -120,22 +119,66 @@ for entry in "${REPOS[@]}"; do
       name=$(path_to_name "$readme")
       echo "    ✓ $name"
 
-      if [ "$first_item" = true ]; then
-        first_item=false
-      else
-        sidebar_items="$sidebar_items,"
-      fi
-      sidebar_items="$sidebar_items{\"text\":\"$name\",\"link\":\"$link_path\"}"
+      # 收集到對應的群組
+      all_items="$all_items|$name|$link_path|$dir"
     fi
   done <<< "$readmes"
 
-  # 寫入 sidebar JSON
+  # 用 python 把 items 分群組生成 sidebar JSON
   if [ "$first_repo" = true ]; then
     first_repo=false
   else
     echo "," >> "$SIDEBAR_FILE"
   fi
-  printf '  "/%s/": [{"text":"%s","items":[%s]}]' "$docs_dir" "$display_name" "$sidebar_items" >> "$SIDEBAR_FILE"
+
+  echo "$all_items" | python3 -c "
+import sys, json
+
+raw = sys.stdin.read().strip()
+items = []
+for part in raw.split('|'):
+    pass  # handled below
+
+# 重新解析
+entries = []
+parts = raw.split('|')
+i = 1
+while i + 2 < len(parts):
+    name = parts[i]
+    link = parts[i+1]
+    dir_path = parts[i+2]
+    entries.append((name, link, dir_path))
+    i += 3
+
+# 分群組
+groups = {}
+standalone = []
+for name, link, dir_path in entries:
+    if '/' in dir_path and dir_path != '.':
+        # 子模組，用第一層目錄分群
+        group = dir_path.split('/')[0]
+        if group not in groups:
+            groups[group] = []
+        groups[group].append({'text': name.split('/')[-1] if '/' in name else name, 'link': link})
+    else:
+        standalone.append({'text': name, 'link': link})
+
+# 組合 sidebar
+sidebar = []
+# 先放獨立項目
+for item in standalone:
+    sidebar.append(item)
+# 再放群組（collapsed）
+for group_name, group_items in sorted(groups.items()):
+    sidebar.append({
+        'text': group_name,
+        'collapsed': True,
+        'items': group_items
+    })
+
+result = [{'text': '$display_name', 'items': sidebar}]
+sys.stdout.write('  \"/$docs_dir/\": ' + json.dumps(result, ensure_ascii=False))
+" >> "$SIDEBAR_FILE"
 done
 
 echo "" >> "$SIDEBAR_FILE"
