@@ -134,6 +134,15 @@ for entry in "${REPOS[@]}"; do
   echo "$all_items" | python3 -c "
 import sys, json
 
+def pretty(name):
+    \"\"\"美化名稱：移除 common-/care-/-spring-boot-starter，- 換空白，首字母大寫\"\"\"
+    n = name
+    n = n.replace('-spring-boot-starter', '')
+    n = n.replace('common-', '')
+    n = n.replace('care-', '')
+    n = n.replace('-', ' ')
+    return n.strip().title() if n.strip() else name
+
 raw = sys.stdin.read().strip()
 entries = []
 parts = raw.split('|')
@@ -160,7 +169,7 @@ for name, link, dir_path in entries:
         group = dir_path.split('/')[0]
         if group not in groups:
             groups[group] = []
-        groups[group].append({'text': dir_path.split('/')[-1], 'link': link})
+        groups[group].append({'text': pretty(dir_path.split('/')[-1]), 'link': link})
     elif dir_path in has_children:
         # 這個目錄有子模組 → 放進群組當第一項（總覽）
         if dir_path not in groups:
@@ -168,13 +177,13 @@ for name, link, dir_path in entries:
         groups[dir_path].insert(0, {'text': '總覽', 'link': link})
     else:
         # 獨立 starter
-        standalone.append({'text': name, 'link': link})
+        standalone.append({'text': pretty(name), 'link': link})
 
 # 組合 sidebar
 sidebar = list(standalone)
 for group_name in sorted(groups.keys()):
     sidebar.append({
-        'text': group_name,
+        'text': pretty(group_name),
         'collapsed': True,
         'items': groups[group_name]
     })
