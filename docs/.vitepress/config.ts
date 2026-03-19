@@ -48,7 +48,8 @@ export default defineConfig({
         {
           text: 'Showcase',
           items: [
-            { text: 'Starter Showcase', link: '/showcase/' },
+            { text: '後端 (Spring Boot)', link: '/showcase/' },
+            { text: '前端 (React)', link: '/showcase/frontend' },
           ],
         },
       ],
