@@ -2,8 +2,8 @@
 
 | 模組 | 版本 | 最後更新 | 最近改動 |
 |------|------|---------|--------|
-| Starters BOM | `1.0.0` | 2026-03-19 | refactor: remove docs/ dir + add migration-dashboa |
-| Showcase 後端 | `1.0.0` | 2026-03-19 | ci: add notify-portal workflow on README change |
+| Starters BOM | `1.0.0` | 2026-03-19 | fix: log filter get user after security filter + m |
+| Showcase 後端 | `1.0.0` | 2026-03-19 | feat(showcase): add signature demo + WebSocket con |
 | Showcase 前端 | `1.0.0` | 2026-03-19 | ci: add notify-portal workflow on README change |
 
-> 文件同步時間：2026-03-19 08:45
+> 文件同步時間：2026-03-19 15:16
