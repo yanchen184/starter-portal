@@ -2,7 +2,6 @@
 # 從各 repo 同步 README 到 docs/
 # 用法: ./scripts/sync-docs.sh (本地) 或 GitHub Actions 自動呼叫
 
-set -e
 DOCS_DIR="docs"
 TEMP_DIR="/tmp/starter-portal-sync"
 rm -rf "$TEMP_DIR"
@@ -20,7 +19,7 @@ sync_file() {
   local branch=${4:-main}
 
   echo "  $repo/$src → $dest"
-  local url="https://raw.githubusercontent./$GITHUB_USER/$repo/$branch/$src"
+  local url="https://raw.githubusercontent.com/$GITHUB_USER/$repo/$branch/$src"
   local status=$(curl -s -o "$DOCS_DIR/$dest" -w "%{http_code}" "$url")
 
   if [ "$status" != "200" ]; then
