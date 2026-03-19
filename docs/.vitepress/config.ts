@@ -1,4 +1,24 @@
 import { defineConfig } from 'vitepress'
+import { readFileSync, existsSync } from 'fs'
+import { resolve } from 'path'
+
+// 讀取 sync script 自動生成的 sidebar
+function loadSidebar() {
+  const sidebarPath = resolve(__dirname, 'sidebar-generated.json')
+  if (existsSync(sidebarPath)) {
+    try {
+      return JSON.parse(readFileSync(sidebarPath, 'utf-8'))
+    } catch {
+      console.warn('Failed to parse sidebar-generated.json, using fallback')
+    }
+  }
+  // Fallback: 手動 sidebar
+  return {
+    '/starters/': [{ text: 'Starters', items: [{ text: '總覽', link: '/starters/' }] }],
+    '/showcase/': [{ text: 'Showcase 後端', items: [{ text: 'README', link: '/showcase/' }] }],
+    '/frontend/': [{ text: 'Showcase 前端', items: [{ text: 'README', link: '/frontend/' }] }],
+  }
+}
 
 export default defineConfig({
   title: 'Company Starters',
@@ -15,39 +35,7 @@ export default defineConfig({
       { text: 'Showcase 前端', link: '/frontend/' },
     ],
 
-    sidebar: {
-      '/starters/': [
-        {
-          text: 'Starters',
-          items: [
-            { text: '總覽', link: '/starters/' },
-            { text: 'Security', link: '/starters/care-security' },
-            { text: 'Log', link: '/starters/common-log-spring-boot-starter' },
-            { text: 'Response', link: '/starters/common-response-spring-boot-starter' },
-            { text: 'JPA', link: '/starters/common-jpa-spring-boot-starter' },
-            { text: 'Attachment', link: '/starters/common-attachment-spring-boot-starter' },
-            { text: 'Report', link: '/starters/common-report' },
-            { text: 'Notification', link: '/starters/common-notification' },
-          ],
-        },
-      ],
-      '/showcase/': [
-        {
-          text: 'Showcase 後端',
-          items: [
-            { text: 'Starter Showcase', link: '/showcase/' },
-          ],
-        },
-      ],
-      '/frontend/': [
-        {
-          text: 'Showcase 前端',
-          items: [
-            { text: 'React Frontend', link: '/frontend/' },
-          ],
-        },
-      ],
-    },
+    sidebar: loadSidebar(),
 
     search: {
       provider: 'local',

@@ -35,3 +35,5 @@ features:
     title: Notification Starter
     details: 多通道通知（Email / WebSocket）、排程發送、失敗重試、狀態追蹤
 ---
+
+<!--@include: ./version-info.md-->
