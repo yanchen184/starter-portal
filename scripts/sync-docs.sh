@@ -14,7 +14,7 @@ echo "=== Syncing docs from GitHub repos ==="
 # 格式: repo_name:branch:docs_dir:display_name
 # 只需要加 repo，裡面的 README 全自動掃描
 REPOS=(
-  "company-common-starters:main:starters:Starters"
+  "wez-spring-boot-starters:main:starters:Starters"
   "starter-showcase:feature/response-starter:showcase:Showcase 後端"
   "security-starter-demo-frontend:master:frontend:Showcase 前端"
 )
@@ -265,7 +265,7 @@ generate_version_info() {
   echo "|------|------|---------|--------|" >> "$output"
 
   local items=(
-    "company-common-starters:main:Starters BOM"
+    "wez-spring-boot-starters:main:Starters BOM"
     "starter-showcase:feature/response-starter:Showcase 後端"
     "security-starter-demo-frontend:master:Showcase 前端"
   )

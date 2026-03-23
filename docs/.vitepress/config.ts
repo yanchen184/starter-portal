@@ -60,7 +60,7 @@ export default defineConfig({
       {
         text: '資源',
         items: [
-          { text: 'GitHub', link: 'https://github.com/yanchen184/company-common-starters' },
+          { text: 'GitHub', link: 'https://github.com/yanchen184/wez-spring-boot-starters' },
           { text: 'Showcase Demo', link: 'https://github.com/yanchen184/starter-showcase' },
         ],
       },
@@ -83,7 +83,7 @@ export default defineConfig({
     },
 
     socialLinks: [
-      { icon: 'github', link: 'https://github.com/yanchen184/company-common-starters' },
+      { icon: 'github', link: 'https://github.com/yanchen184/wez-spring-boot-starters' },
     ],
 
     footer: {

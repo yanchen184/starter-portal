@@ -10,7 +10,7 @@ hero:
       link: /starters/
     - theme: alt
       text: 查看原始碼
-      link: https://github.com/yanchen184/company-common-starters
+      link: https://github.com/yanchen184/wez-spring-boot-starters
 
 features:
   - icon: 🔐
@@ -59,7 +59,7 @@ features:
   &lt;dependencies&gt;
     &lt;dependency&gt;
       &lt;groupId&gt;com.company.common&lt;/groupId&gt;
-      &lt;artifactId&gt;company-common-starters&lt;/artifactId&gt;
+      &lt;artifactId&gt;wez-spring-boot-starters&lt;/artifactId&gt;
       &lt;version&gt;1.0.0&lt;/version&gt;
       &lt;type&gt;pom&lt;/type&gt;
       &lt;scope&gt;import&lt;/scope&gt;
