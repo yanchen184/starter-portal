@@ -33,7 +33,7 @@ import sys, json
 data = json.load(sys.stdin)
 for item in data.get('tree', []):
     path = item.get('path', '')
-    if path.endswith('README.md') and 'node_modules' not in path and 'target' not in path and 'test' not in path:
+    if path.endswith('README.md') and 'node_modules' not in path and 'target' not in path and 'src/test' not in path:
         print(path)
 " 2>/dev/null
 }
