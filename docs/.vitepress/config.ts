@@ -56,6 +56,7 @@ export default defineConfig({
           { text: 'Showcase 前端', link: '/frontend/' },
         ],
       },
+      { text: 'README 規範', link: '/template' },
       {
         text: '資源',
         items: [

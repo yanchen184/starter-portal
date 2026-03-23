@@ -4,9 +4,6 @@ hero:
   name: Company Starters
   text: 企業級 Spring Boot 共用元件庫
   tagline: 標準化、模組化、零配置 — 加入依賴即生效，專注業務邏輯開發
-  image:
-    src: /hero-image.svg
-    alt: Company Starters
   actions:
     - theme: brand
       text: 快速開始
@@ -50,7 +47,7 @@ features:
 
 <div class="quick-start-section">
 
-## 三步驟開始使用
+<h2>三步驟開始使用</h2>
 
 <div class="steps-grid">
 
@@ -58,66 +55,50 @@ features:
   <div class="step-number">1</div>
   <h3>引入 BOM</h3>
   <p>在專案 <code>pom.xml</code> 加入 BOM，統一管理所有 Starter 版本。</p>
-
-```xml
-<dependencyManagement>
-  <dependencies>
-    <dependency>
-      <groupId>com.company.common</groupId>
-      <artifactId>company-common-starters</artifactId>
-      <version>1.0.0</version>
-      <type>pom</type>
-      <scope>import</scope>
-    </dependency>
-  </dependencies>
-</dependencyManagement>
-```
-
+  <pre><code class="language-xml">&lt;dependencyManagement&gt;
+  &lt;dependencies&gt;
+    &lt;dependency&gt;
+      &lt;groupId&gt;com.company.common&lt;/groupId&gt;
+      &lt;artifactId&gt;company-common-starters&lt;/artifactId&gt;
+      &lt;version&gt;1.0.0&lt;/version&gt;
+      &lt;type&gt;pom&lt;/type&gt;
+      &lt;scope&gt;import&lt;/scope&gt;
+    &lt;/dependency&gt;
+  &lt;/dependencies&gt;
+&lt;/dependencyManagement&gt;</code></pre>
 </div>
 
 <div class="step-card">
   <div class="step-number">2</div>
   <h3>選擇 Starter</h3>
   <p>依需求挑選模組，不需要指定版本號。</p>
-
-```xml
-<dependencies>
-  <dependency>
-    <groupId>com.company.common</groupId>
-    <artifactId>common-log-spring-boot-starter</artifactId>
-  </dependency>
-  <dependency>
-    <groupId>com.company.common</groupId>
-    <artifactId>common-response-spring-boot-starter</artifactId>
-  </dependency>
-</dependencies>
-```
-
+  <pre><code class="language-xml">&lt;dependencies&gt;
+  &lt;dependency&gt;
+    &lt;groupId&gt;com.company.common&lt;/groupId&gt;
+    &lt;artifactId&gt;common-log-spring-boot-starter&lt;/artifactId&gt;
+  &lt;/dependency&gt;
+  &lt;dependency&gt;
+    &lt;groupId&gt;com.company.common&lt;/groupId&gt;
+    &lt;artifactId&gt;common-response-spring-boot-starter&lt;/artifactId&gt;
+  &lt;/dependency&gt;
+&lt;/dependencies&gt;</code></pre>
 </div>
 
 <div class="step-card">
   <div class="step-number">3</div>
   <h3>完成，零配置</h3>
   <p>啟動應用程式，所有功能自動生效。</p>
-
-```bash
-mvn spring-boot:run
-```
-
-```
-INFO --> POST /api/users user=admin
-INFO <-- 200 POST /api/users 45ms
-```
-
-<p>需要客製化？每個模組都支援 <code>application.yml</code> 調整。</p>
+  <pre><code class="language-bash">mvn spring-boot:run</code></pre>
+  <pre><code>INFO --&gt; POST /api/users user=admin
+INFO &lt;-- 200 POST /api/users 45ms</code></pre>
+  <p>需要客製化？每個模組都支援 <code>application.yml</code> 調整。</p>
 </div>
 
 </div>
 </div>
 
 <div class="tech-stack-section">
-
-## 技術棧
+<h2>技術棧</h2>
 
 | 項目 | 版本 | 說明 |
 |------|------|------|
@@ -182,6 +163,12 @@ INFO <-- 200 POST /api/users 45ms
   color: var(--vp-c-text-2);
   font-size: 0.9rem;
   line-height: 1.6;
+}
+
+.step-card pre {
+  margin: 0.8rem 0;
+  border-radius: 8px;
+  font-size: 0.8rem;
 }
 
 .step-number {
