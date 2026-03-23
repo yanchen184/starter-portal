@@ -164,37 +164,50 @@ def build_sidebar_group(display_name, entries):
         if '/' in dir_path and dir_path != '.':
             has_children.add(dir_path.split('/')[0])
 
+    # 找根 README 的 link（提升到群組標題）
+    root_link = None
+
     # 第二輪：分群組
-    groups = {}
+    groups = {}       # group_name -> { 'link': ..., 'items': [...] }
     standalone = []
     for name, link, dir_path in entries:
         if dir_path == '.':
-            standalone.append({'text': name, 'link': link})
+            # 根 README → 提升為群組標題的 link，不作為子項目
+            root_link = link
         elif '/' in dir_path:
             group = dir_path.split('/')[0]
             if group not in groups:
-                groups[group] = []
-            groups[group].append({'text': pretty(dir_path.split('/')[-1]), 'link': link})
+                groups[group] = {'link': None, 'items': []}
+            groups[group]['items'].append({'text': pretty(dir_path.split('/')[-1]), 'link': link})
         elif dir_path in has_children:
+            # 子群組的根 README → 提升為子群組標題的 link
             if dir_path not in groups:
-                groups[dir_path] = []
-            groups[dir_path].insert(0, {'text': '總覽', 'link': link})
+                groups[dir_path] = {'link': None, 'items': []}
+            groups[dir_path]['link'] = link
         else:
             standalone.append({'text': pretty(name), 'link': link})
 
     # 組合
     sidebar_items = list(standalone)
     for group_name in sorted(groups.keys()):
-        sidebar_items.append({
+        group_data = groups[group_name]
+        group_item = {
             'text': pretty(group_name),
             'collapsed': True,
-            'items': groups[group_name]
-        })
+            'items': group_data['items']
+        }
+        if group_data['link']:
+            group_item['link'] = group_data['link']
+        sidebar_items.append(group_item)
 
-    return {
+    result = {
         'text': display_name,
         'items': sidebar_items
     }
+    if root_link:
+        result['link'] = root_link
+
+    return result
 
 tmpdir = os.environ['SIDEBAR_TMPDIR']
 repo_count = int(os.environ['SIDEBAR_REPO_COUNT'])
@@ -213,12 +226,15 @@ for i in range(repo_count):
     entries = parse_items(raw_items)
     if entries:
         group = build_sidebar_group(display_name, entries)
-        unified_sidebar.append(group)
+        # 只有根 README、沒有子項目 → 扁平化為直接連結
+        if group.get('link') and not group.get('items', []):
+            unified_sidebar.append({'text': display_name, 'link': group['link']})
+        else:
+            unified_sidebar.append(group)
     else:
-        # 即使沒有成功下載任何文件，也保留該 group 的總覽連結
         unified_sidebar.append({
             'text': display_name,
-            'items': [{'text': '總覽', 'link': f'/{docs_dir}/'}]
+            'link': f'/{docs_dir}/'
         })
 
 # 輸出統一的 sidebar 陣列

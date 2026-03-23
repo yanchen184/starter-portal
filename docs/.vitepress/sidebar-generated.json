@@ -3,10 +3,6 @@
     "text": "Starters",
     "items": [
       {
-        "text": "總覽",
-        "link": "/starters/"
-      },
-      {
         "text": "Attachment",
         "link": "/starters/common-attachment-spring-boot-starter"
       },
@@ -45,10 +41,6 @@
         "collapsed": true,
         "items": [
           {
-            "text": "總覽",
-            "link": "/starters/care-security"
-          },
-          {
             "text": "Security Auth Captcha",
             "link": "/starters/care-security-common-security-auth-captcha"
           },
@@ -84,16 +76,13 @@
             "text": "Security Test",
             "link": "/starters/care-security-common-security-test"
           }
-        ]
+        ],
+        "link": "/starters/care-security"
       },
       {
         "text": "Report",
         "collapsed": true,
         "items": [
-          {
-            "text": "總覽",
-            "link": "/starters/common-report"
-          },
           {
             "text": "Report Autoconfigure",
             "link": "/starters/common-report-common-report-autoconfigure"
@@ -122,26 +111,18 @@
             "text": "Report Test",
             "link": "/starters/common-report-common-report-test"
           }
-        ]
+        ],
+        "link": "/starters/common-report"
       }
-    ]
+    ],
+    "link": "/starters/"
   },
   {
     "text": "Showcase 後端",
-    "items": [
-      {
-        "text": "總覽",
-        "link": "/showcase/"
-      }
-    ]
+    "link": "/showcase/"
   },
   {
     "text": "Showcase 前端",
-    "items": [
-      {
-        "text": "總覽",
-        "link": "/frontend/"
-      }
-    ]
+    "link": "/frontend/"
   }
 ]
