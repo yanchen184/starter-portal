@@ -6,6 +6,7 @@
 DOCS_DIR="docs"
 GITHUB_USER="yanchen184"
 SIDEBAR_FILE="docs/.vitepress/sidebar-generated.json"
+TMPDIR_SIDEBAR=$(mktemp -d)
 
 echo "=== Syncing docs from GitHub repos ==="
 
@@ -76,8 +77,7 @@ path_to_name() {
 }
 
 # ===== 開始同步 =====
-echo "{" > "$SIDEBAR_FILE"
-first_repo=true
+repo_index=0
 
 for entry in "${REPOS[@]}"; do
   IFS=':' read -r repo branch docs_dir display_name <<< "$entry"
@@ -124,18 +124,22 @@ for entry in "${REPOS[@]}"; do
     fi
   done <<< "$readmes"
 
-  # 用 python 把 items 分群組生成 sidebar JSON
-  if [ "$first_repo" = true ]; then
-    first_repo=false
-  else
-    echo "," >> "$SIDEBAR_FILE"
-  fi
+  # 把這個 repo 的資料寫到暫存檔
+  echo "$docs_dir" > "$TMPDIR_SIDEBAR/repo_${repo_index}.txt"
+  echo "$display_name" >> "$TMPDIR_SIDEBAR/repo_${repo_index}.txt"
+  echo "$all_items" >> "$TMPDIR_SIDEBAR/repo_${repo_index}.txt"
+  repo_index=$((repo_index + 1))
+done
 
-  echo "$all_items" | python3 -c "
-import sys, json
+# ===== 用 python 統一生成 sidebar JSON =====
+echo ""
+echo "--- Generating unified sidebar ---"
+
+SIDEBAR_TMPDIR="$TMPDIR_SIDEBAR" SIDEBAR_REPO_COUNT="$repo_index" SIDEBAR_OUTPUT="$SIDEBAR_FILE" python3 << 'PYTHON_SCRIPT'
+import sys, json, os
 
 def pretty(name):
-    \"\"\"美化名稱：移除 common-/care-/-spring-boot-starter，- 換空白，首字母大寫\"\"\"
+    """美化名稱：移除 common-/care-/-spring-boot-starter，- 換空白，首字母大寫"""
     n = name
     n = n.replace('-spring-boot-starter', '')
     n = n.replace('common-', '')
@@ -143,58 +147,91 @@ def pretty(name):
     n = n.replace('-', ' ')
     return n.strip().title() if n.strip() else name
 
-raw = sys.stdin.read().strip()
-entries = []
-parts = raw.split('|')
-i = 1
-while i + 2 < len(parts):
-    entries.append((parts[i], parts[i+1], parts[i+2]))
-    i += 3
+def parse_items(raw):
+    entries = []
+    parts = raw.split('|')
+    i = 1
+    while i + 2 < len(parts):
+        entries.append((parts[i], parts[i+1], parts[i+2]))
+        i += 3
+    return entries
 
-# 第一輪：收集哪些目錄有子模組
-has_children = set()
-for name, link, dir_path in entries:
-    if '/' in dir_path and dir_path != '.':
-        has_children.add(dir_path.split('/')[0])
+def build_sidebar_group(display_name, entries):
+    """把一個 repo 的 entries 轉成 VitePress sidebar group"""
+    # 第一輪：收集哪些目錄有子模組
+    has_children = set()
+    for name, link, dir_path in entries:
+        if '/' in dir_path and dir_path != '.':
+            has_children.add(dir_path.split('/')[0])
 
-# 第二輪：分群組
-groups = {}  # group_name -> [(text, link)]
-standalone = []
-for name, link, dir_path in entries:
-    if dir_path == '.':
-        # 根目錄 README（總覽）
-        standalone.append({'text': name, 'link': link})
-    elif '/' in dir_path:
-        # 子模組
-        group = dir_path.split('/')[0]
-        if group not in groups:
-            groups[group] = []
-        groups[group].append({'text': pretty(dir_path.split('/')[-1]), 'link': link})
-    elif dir_path in has_children:
-        # 這個目錄有子模組 → 放進群組當第一項（總覽）
-        if dir_path not in groups:
-            groups[dir_path] = []
-        groups[dir_path].insert(0, {'text': '總覽', 'link': link})
+    # 第二輪：分群組
+    groups = {}
+    standalone = []
+    for name, link, dir_path in entries:
+        if dir_path == '.':
+            standalone.append({'text': name, 'link': link})
+        elif '/' in dir_path:
+            group = dir_path.split('/')[0]
+            if group not in groups:
+                groups[group] = []
+            groups[group].append({'text': pretty(dir_path.split('/')[-1]), 'link': link})
+        elif dir_path in has_children:
+            if dir_path not in groups:
+                groups[dir_path] = []
+            groups[dir_path].insert(0, {'text': '總覽', 'link': link})
+        else:
+            standalone.append({'text': pretty(name), 'link': link})
+
+    # 組合
+    sidebar_items = list(standalone)
+    for group_name in sorted(groups.keys()):
+        sidebar_items.append({
+            'text': pretty(group_name),
+            'collapsed': True,
+            'items': groups[group_name]
+        })
+
+    return {
+        'text': display_name,
+        'items': sidebar_items
+    }
+
+tmpdir = os.environ['SIDEBAR_TMPDIR']
+repo_count = int(os.environ['SIDEBAR_REPO_COUNT'])
+sidebar_file = os.environ['SIDEBAR_OUTPUT']
+
+unified_sidebar = []
+
+for i in range(repo_count):
+    filepath = os.path.join(tmpdir, f'repo_{i}.txt')
+    with open(filepath, 'r') as f:
+        lines = f.read().split('\n', 2)
+        docs_dir = lines[0]
+        display_name = lines[1]
+        raw_items = lines[2] if len(lines) > 2 else ''
+
+    entries = parse_items(raw_items)
+    if entries:
+        group = build_sidebar_group(display_name, entries)
+        unified_sidebar.append(group)
     else:
-        # 獨立 starter
-        standalone.append({'text': pretty(name), 'link': link})
+        # 即使沒有成功下載任何文件，也保留該 group 的總覽連結
+        unified_sidebar.append({
+            'text': display_name,
+            'items': [{'text': '總覽', 'link': f'/{docs_dir}/'}]
+        })
 
-# 組合 sidebar
-sidebar = list(standalone)
-for group_name in sorted(groups.keys()):
-    sidebar.append({
-        'text': pretty(group_name),
-        'collapsed': True,
-        'items': groups[group_name]
-    })
+# 輸出統一的 sidebar 陣列
+with open(sidebar_file, 'w') as f:
+    json.dump(unified_sidebar, f, ensure_ascii=False, indent=2)
 
-result = [{'text': '$display_name', 'items': sidebar}]
-sys.stdout.write('  \"/$docs_dir/\": ' + json.dumps(result, ensure_ascii=False))
-" >> "$SIDEBAR_FILE"
-done
+print(f'  Written {len(unified_sidebar)} groups to sidebar')
+PYTHON_SCRIPT
 
-echo "" >> "$SIDEBAR_FILE"
-echo "}" >> "$SIDEBAR_FILE"
+# 清理暫存
+rm -rf "$TMPDIR_SIDEBAR"
+
+echo "  sidebar-generated.json written (unified)"
 
 # ===== 生成首頁版本資訊 =====
 echo ""
