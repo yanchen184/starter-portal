@@ -119,10 +119,20 @@
   },
   {
     "text": "Showcase 後端",
-    "link": "/showcase/"
+    "items": [
+      {
+        "text": "總覽",
+        "link": "/showcase/"
+      }
+    ]
   },
   {
     "text": "Showcase 前端",
-    "link": "/frontend/"
+    "items": [
+      {
+        "text": "總覽",
+        "link": "/frontend/"
+      }
+    ]
   }
 ]
