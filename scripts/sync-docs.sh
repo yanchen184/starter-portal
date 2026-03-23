@@ -202,6 +202,7 @@ def build_sidebar_group(display_name, entries):
 
     result = {
         'text': display_name,
+        'collapsed': False,
         'items': sidebar_items
     }
     if root_link:
@@ -226,16 +227,13 @@ for i in range(repo_count):
     entries = parse_items(raw_items)
     if entries:
         group = build_sidebar_group(display_name, entries)
-        # 只有根 README、沒有子項目 → 扁平化為直接連結
+        # 只有根 README、沒有子項目 → 直接連結，不需要收合
         if group.get('link') and not group.get('items', []):
             unified_sidebar.append({'text': display_name, 'link': group['link']})
         else:
             unified_sidebar.append(group)
     else:
-        unified_sidebar.append({
-            'text': display_name,
-            'link': f'/{docs_dir}/'
-        })
+        unified_sidebar.append({'text': display_name, 'link': f'/{docs_dir}/'})
 
 # 輸出統一的 sidebar 陣列
 with open(sidebar_file, 'w') as f:
