@@ -2,8 +2,8 @@
 
 | 模組 | 版本 | 最後更新 | 最近改動 |
 |------|------|---------|--------|
-| Starters BOM | `1.0.0` | 2026-03-23 | feat(notification-starter): 補齊 CC/BCC、批次 ID、業務關聯功能 |
+| Starters BOM | `1.0.0` | 2026-03-23 | docs(diagram-starter): rewrite README for generali |
 | Showcase 後端 | `1.0.0` | 2026-03-20 | fix: WebSocket auth + Flyway V6 欄位修正 + PageControl |
-| Showcase 前端 | `1.0.0` | 2026-03-20 | fix: WebSocket 訂閱改用 /user/queue/notifications（不帶 u |
+| Showcase 前端 | `1.0.0` | 2026-03-23 | refactor: 前端 Signature → Diagram Demo |
 
-> 文件同步時間：2026-03-23 09:01
+> 文件同步時間：2026-03-23 09:58
