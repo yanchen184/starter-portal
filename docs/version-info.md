@@ -4,10 +4,6 @@
 |------|------|---------|--------|
 | Starters BOM | `1.0.0` | 2026-03-23 | docs: 全部 README 統一模板重寫 + 補齊 9 個缺失模組 |
 | Showcase 後端 | `1.0.0` | 2026-03-20 | fix: WebSocket auth + Flyway V6 欄位修正 + PageControl |
-| Showcase 前端 | `1.0.0` | 2026-03-20 | fix: WebSocket 訂閱改用 /user/queue/notifications |
+| Showcase 前端 | `1.0.0` | 2026-03-20 | fix: WebSocket 訂閱改用 /user/queue/notifications（不帶 u |
 
-<<<<<<< HEAD
-> 文件同步時間：2026-03-23 06:07
-=======
-> 文件同步時間：2026-03-23 14:06
->>>>>>> 11f1aaa (feat: 新增 README 撰寫規範頁面 + 模板下載功能)
+> 文件同步時間：2026-03-23 06:11
