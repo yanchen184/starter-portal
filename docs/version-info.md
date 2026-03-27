@@ -2,8 +2,8 @@
 
 | 模組 | 版本 | 最後更新 | 最近改動 |
 |------|------|---------|--------|
-| Starters BOM | `1.0.0` | 2026-03-27 | feat: add GCA, MOEACA, XCA certificate authenticat |
+| Starters BOM | `1.0.0` | 2026-03-27 | feat: add common-api-hub-spring-boot-starter |
 | Showcase 後端 | `1.0.0` | 2026-03-20 | fix: WebSocket auth + Flyway V6 欄位修正 + PageControl |
-| Showcase 前端 | `1.0.0` | 2026-03-27 | feat: support GCA/MOEACA/XCA certificate types in  |
+| Showcase 前端 | `1.0.0` | 2026-03-27 | feat: add API Hub Demo page |
 
-> 文件同步時間：2026-03-27 01:49
+> 文件同步時間：2026-03-27 08:15
