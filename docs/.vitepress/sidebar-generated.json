@@ -46,8 +46,16 @@
             "link": "/starters/care-security-common-security-auth-captcha"
           },
           {
+            "text": "Security Auth Gca",
+            "link": "/starters/care-security-common-security-auth-gca"
+          },
+          {
             "text": "Security Auth Ldap",
             "link": "/starters/care-security-common-security-auth-ldap"
+          },
+          {
+            "text": "Security Auth Moeaca",
+            "link": "/starters/care-security-common-security-auth-moeaca"
           },
           {
             "text": "Security Auth Moica",
@@ -56,6 +64,10 @@
           {
             "text": "Security Auth Otp",
             "link": "/starters/care-security-common-security-auth-otp"
+          },
+          {
+            "text": "Security Auth Xca",
+            "link": "/starters/care-security-common-security-auth-xca"
           },
           {
             "text": "Security Autoconfigure",
