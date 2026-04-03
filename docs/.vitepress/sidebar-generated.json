@@ -36,6 +36,10 @@
         "collapsed": true,
         "items": [
           {
+            "text": "Health Card",
+            "link": "/starters/business-common-health-card-spring-boot-starter"
+          },
+          {
             "text": "Signature",
             "link": "/starters/business-common-signature-spring-boot-starter"
           }

@@ -139,15 +139,21 @@ curl -X POST http://your-host/api/hub/token/refresh \
 | false | true | 只能 Token |
 | true | true | 都可以 |
 
-### 日誌脫敏
+### 呼叫日誌（HubLog → DB）
 
-請求參數自動脫敏：
+每次外部系統呼叫都會記錄到 `HUB_LOG` 表，用於**審計追蹤**（誰、什麼時候、從哪個 IP、打了什麼 API、結果如何）。
+
+> 這跟 `common-log-starter` 不同。common-log 記的是 log 檔（技術除錯用），HubLog 記的是 DB（業務審計用，可查詢、可統計、可舉證）。
+
+**DB 脫敏** — 存入 HUB_LOG 表之前，自動替換機敏欄位：
 ```
 原始：{"username":"admin","password":"mySecret123"}
-儲存：{"username":"admin","password":"***"}
+存入 DB：{"username":"admin","password":"***"}
 ```
 
-脫敏欄位可配置（預設：password、passcode、secret）。
+**定期清理** — 超過 retention-days 的舊日誌自動從 DB 刪除，避免表無限膨脹。
+
+脫敏欄位和保留天數皆可配置。
 
 ---
 
@@ -204,8 +210,8 @@ curl -X POST http://your-host/api/hub/token/refresh \
 | `common.api-hub.enabled` | `false` | 全局開關 |
 | `common.api-hub.jwt.secret-key` | `default-...` | JWT 密鑰（建議 32 字元以上） |
 | `common.api-hub.ip-whitelist.allow-local` | `true` | 允許 localhost |
-| `common.api-hub.log.mask-fields` | `[password, passcode, secret]` | 日誌脫敏欄位 |
-| `common.api-hub.log.retention-days` | `90` | 日誌保留天數 |
+| `common.api-hub.log.mask-fields` | `[password, passcode, secret]` | 存入 DB 前脫敏的欄位名稱 |
+| `common.api-hub.log.retention-days` | `90` | DB 日誌保留天數（超過自動清理） |
 
 ---
 
