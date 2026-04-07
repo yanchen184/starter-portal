@@ -32,6 +32,7 @@
 | `care-security` | 安全模組 | JWT 認證、RBAC、LDAP、OTP、CAPTCHA、自然人憑證 |
 | **業務級 Starter** | | |
 | `common-signature-spring-boot-starter` | 電子簽名板 | Canvas JSON 存儲 + 附件圖片管理，依賴 attachment |
+| `common-health-card-spring-boot-starter` | 健保卡管理 | CRUD、狀態機、就醫紀錄、操作日誌、讀卡，42 個測試 |
 
 ### 技術棧
 
@@ -297,6 +298,7 @@ care:
 | `wez-report` + 4 引擎 | `common-report-spring-boot-starter` |
 | `wez-notification` | `common-notification-spring-boot-starter` |
 | `wez-diagram-sign` | `common-signature-spring-boot-starter`（business） |
+| 全新模組 | `common-health-card-spring-boot-starter`（business） |
 
 ### 原生取代（2 個）
 
@@ -355,7 +357,8 @@ company-common-starters/
 │   ├── common-security-spring-boot-starter/ Starter 空殼
 │   └── common-security-test/            整合測試
 ├── business/                            ← 業務級 Starter
-│   └── common-signature-spring-boot-starter/ 電子簽名板
+│   ├── common-signature-spring-boot-starter/ 電子簽名板
+│   └── common-health-card-spring-boot-starter/ 健保卡管理
 └── docs/                                ← 遷移文件
     ├── migration-starter-analysis.md    42 模組完整分析
     └── migration/                       各模組遷移指南
@@ -377,6 +380,9 @@ common-notification-spring-boot-starter     ← 獨立可用
 common-signature-spring-boot-starter       ← business
 ├── common-jpa-spring-boot-starter
 └── common-attachment-spring-boot-starter
+
+common-health-card-spring-boot-starter     ← business
+└── common-jpa-spring-boot-starter
 ```
 
 ---
@@ -483,6 +489,7 @@ mvn clean compile
 | 版本 | 日期 | 變更摘要 |
 |------|------|---------|
 | 1.0.0 | 2026-03-18 | 初始版本：log、response、jpa、security、attachment、report、notification、signature |
+| 1.0.0 | 2026-04-03 | 新增 health-card：CRUD、狀態機、就醫紀錄、操作日誌、讀卡（42 tests） |
 
 ---
 
