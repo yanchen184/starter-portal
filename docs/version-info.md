@@ -6,4 +6,4 @@
 | Showcase 後端 | `1.0.0` | 2026-03-20 | fix: WebSocket auth + Flyway V6 欄位修正 + PageControl |
 | Showcase 前端 | `1.0.0` | 2026-04-07 | refactor: simplify CryptoDemoPage to AES-only, rem |
 
-> 文件同步時間：2026-04-07 02:02
+> 文件同步時間：2026-04-09 02:56

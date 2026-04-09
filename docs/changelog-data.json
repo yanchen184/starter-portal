@@ -277,5 +277,23 @@
       "linesRemoved": 0,
       "changeType": "new"
     }
+  ],
+  "showcase/index": [
+    {
+      "date": "2026-04-09",
+      "summary": "新增文件",
+      "linesAdded": 239,
+      "linesRemoved": 0,
+      "changeType": "new"
+    }
+  ],
+  "frontend/index": [
+    {
+      "date": "2026-04-09",
+      "summary": "新增文件",
+      "linesAdded": 95,
+      "linesRemoved": 0,
+      "changeType": "new"
+    }
   ]
 }
