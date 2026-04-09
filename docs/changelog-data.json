@@ -1,0 +1,281 @@
+{
+  "starters/index": [
+    {
+      "date": "2026-04-09",
+      "summary": "新增文件",
+      "linesAdded": 504,
+      "linesRemoved": 0,
+      "changeType": "new"
+    }
+  ],
+  "starters/business-common-health-card-spring-boot-starter": [
+    {
+      "date": "2026-04-09",
+      "summary": "新增文件",
+      "linesAdded": 306,
+      "linesRemoved": 0,
+      "changeType": "new"
+    }
+  ],
+  "starters/business-common-signature-spring-boot-starter": [
+    {
+      "date": "2026-04-09",
+      "summary": "新增文件",
+      "linesAdded": 276,
+      "linesRemoved": 0,
+      "changeType": "new"
+    }
+  ],
+  "starters/care-security": [
+    {
+      "date": "2026-04-09",
+      "summary": "新增文件",
+      "linesAdded": 281,
+      "linesRemoved": 0,
+      "changeType": "new"
+    }
+  ],
+  "starters/care-security-common-security-auth-captcha": [
+    {
+      "date": "2026-04-09",
+      "summary": "新增文件",
+      "linesAdded": 184,
+      "linesRemoved": 0,
+      "changeType": "new"
+    }
+  ],
+  "starters/care-security-common-security-auth-gca": [
+    {
+      "date": "2026-04-09",
+      "summary": "新增文件",
+      "linesAdded": 100,
+      "linesRemoved": 0,
+      "changeType": "new"
+    }
+  ],
+  "starters/care-security-common-security-auth-ldap": [
+    {
+      "date": "2026-04-09",
+      "summary": "新增文件",
+      "linesAdded": 171,
+      "linesRemoved": 0,
+      "changeType": "new"
+    }
+  ],
+  "starters/care-security-common-security-auth-moeaca": [
+    {
+      "date": "2026-04-09",
+      "summary": "新增文件",
+      "linesAdded": 98,
+      "linesRemoved": 0,
+      "changeType": "new"
+    }
+  ],
+  "starters/care-security-common-security-auth-moica": [
+    {
+      "date": "2026-04-09",
+      "summary": "新增文件",
+      "linesAdded": 240,
+      "linesRemoved": 0,
+      "changeType": "new"
+    }
+  ],
+  "starters/care-security-common-security-auth-otp": [
+    {
+      "date": "2026-04-09",
+      "summary": "新增文件",
+      "linesAdded": 218,
+      "linesRemoved": 0,
+      "changeType": "new"
+    }
+  ],
+  "starters/care-security-common-security-auth-xca": [
+    {
+      "date": "2026-04-09",
+      "summary": "新增文件",
+      "linesAdded": 111,
+      "linesRemoved": 0,
+      "changeType": "new"
+    }
+  ],
+  "starters/care-security-common-security-autoconfigure": [
+    {
+      "date": "2026-04-09",
+      "summary": "新增文件",
+      "linesAdded": 207,
+      "linesRemoved": 0,
+      "changeType": "new"
+    }
+  ],
+  "starters/care-security-common-security-cert-core": [
+    {
+      "date": "2026-04-09",
+      "summary": "新增文件",
+      "linesAdded": 119,
+      "linesRemoved": 0,
+      "changeType": "new"
+    }
+  ],
+  "starters/care-security-common-security-core": [
+    {
+      "date": "2026-04-09",
+      "summary": "新增文件",
+      "linesAdded": 276,
+      "linesRemoved": 0,
+      "changeType": "new"
+    }
+  ],
+  "starters/care-security-common-security-spring-boot-starter": [
+    {
+      "date": "2026-04-09",
+      "summary": "新增文件",
+      "linesAdded": 103,
+      "linesRemoved": 0,
+      "changeType": "new"
+    }
+  ],
+  "starters/care-security-common-security-test": [
+    {
+      "date": "2026-04-09",
+      "summary": "新增文件",
+      "linesAdded": 201,
+      "linesRemoved": 0,
+      "changeType": "new"
+    }
+  ],
+  "starters/common-api-hub-spring-boot-starter": [
+    {
+      "date": "2026-04-09",
+      "summary": "新增文件",
+      "linesAdded": 302,
+      "linesRemoved": 0,
+      "changeType": "new"
+    }
+  ],
+  "starters/common-attachment-spring-boot-starter": [
+    {
+      "date": "2026-04-09",
+      "summary": "新增文件",
+      "linesAdded": 491,
+      "linesRemoved": 0,
+      "changeType": "new"
+    }
+  ],
+  "starters/common-jpa-spring-boot-starter": [
+    {
+      "date": "2026-04-09",
+      "summary": "新增文件",
+      "linesAdded": 270,
+      "linesRemoved": 0,
+      "changeType": "new"
+    }
+  ],
+  "starters/common-log-spring-boot-starter": [
+    {
+      "date": "2026-04-09",
+      "summary": "新增文件",
+      "linesAdded": 363,
+      "linesRemoved": 0,
+      "changeType": "new"
+    }
+  ],
+  "starters/common-notification-spring-boot-starter": [
+    {
+      "date": "2026-04-09",
+      "summary": "新增文件",
+      "linesAdded": 441,
+      "linesRemoved": 0,
+      "changeType": "new"
+    }
+  ],
+  "starters/common-report": [
+    {
+      "date": "2026-04-09",
+      "summary": "新增文件",
+      "linesAdded": 804,
+      "linesRemoved": 0,
+      "changeType": "new"
+    }
+  ],
+  "starters/common-report-common-report-autoconfigure": [
+    {
+      "date": "2026-04-09",
+      "summary": "新增文件",
+      "linesAdded": 162,
+      "linesRemoved": 0,
+      "changeType": "new"
+    }
+  ],
+  "starters/common-report-common-report-core": [
+    {
+      "date": "2026-04-09",
+      "summary": "新增文件",
+      "linesAdded": 229,
+      "linesRemoved": 0,
+      "changeType": "new"
+    }
+  ],
+  "starters/common-report-common-report-engine-easyexcel": [
+    {
+      "date": "2026-04-09",
+      "summary": "新增文件",
+      "linesAdded": 210,
+      "linesRemoved": 0,
+      "changeType": "new"
+    }
+  ],
+  "starters/common-report-common-report-engine-jasper": [
+    {
+      "date": "2026-04-09",
+      "summary": "新增文件",
+      "linesAdded": 144,
+      "linesRemoved": 0,
+      "changeType": "new"
+    }
+  ],
+  "starters/common-report-common-report-engine-xdocreport": [
+    {
+      "date": "2026-04-09",
+      "summary": "新增文件",
+      "linesAdded": 175,
+      "linesRemoved": 0,
+      "changeType": "new"
+    }
+  ],
+  "starters/common-report-common-report-spring-boot-starter": [
+    {
+      "date": "2026-04-09",
+      "summary": "新增文件",
+      "linesAdded": 59,
+      "linesRemoved": 0,
+      "changeType": "new"
+    }
+  ],
+  "starters/common-report-common-report-test": [
+    {
+      "date": "2026-04-09",
+      "summary": "新增文件",
+      "linesAdded": 140,
+      "linesRemoved": 0,
+      "changeType": "new"
+    }
+  ],
+  "starters/common-response-spring-boot-starter": [
+    {
+      "date": "2026-04-09",
+      "summary": "新增文件",
+      "linesAdded": 545,
+      "linesRemoved": 0,
+      "changeType": "new"
+    }
+  ],
+  "starters/company-build-tools": [
+    {
+      "date": "2026-04-09",
+      "summary": "新增文件",
+      "linesAdded": 179,
+      "linesRemoved": 0,
+      "changeType": "new"
+    }
+  ]
+}

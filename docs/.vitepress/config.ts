@@ -2,6 +2,19 @@ import { defineConfig } from 'vitepress'
 import { readFileSync, existsSync } from 'fs'
 import { resolve } from 'path'
 
+// 讀取變更紀錄
+function loadChangelog(): Record<string, unknown[]> {
+  const changelogPath = resolve(__dirname, '../changelog-data.json')
+  if (existsSync(changelogPath)) {
+    try {
+      return JSON.parse(readFileSync(changelogPath, 'utf-8'))
+    } catch {
+      console.warn('Failed to parse changelog-data.json')
+    }
+  }
+  return {}
+}
+
 // 讀取 sync script 自動生成的統一 sidebar
 function loadSidebar() {
   const sidebarPath = resolve(__dirname, 'sidebar-generated.json')
@@ -28,12 +41,22 @@ function loadSidebar() {
   }
 }
 
+const changelog = loadChangelog()
+
 export default defineConfig({
   title: 'Company Starters',
   description: '企業級 Spring Boot Starter 共用元件庫 — 技術文件中心',
   lang: 'zh-TW',
   base: '/starter-portal/',
   ignoreDeadLinks: true,
+
+  transformPageData(pageData) {
+    // 用頁面的相對路徑（去掉 .md）匹配 changelog key
+    const key = pageData.relativePath.replace(/\.md$/, '')
+    if (changelog[key]) {
+      pageData.frontmatter.changelog = changelog[key]
+    }
+  },
 
   head: [
     ['meta', { name: 'theme-color', content: '#3eaf7c' }],

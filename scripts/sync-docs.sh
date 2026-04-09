@@ -6,7 +6,13 @@
 DOCS_DIR="docs"
 GITHUB_USER="yanchen184"
 SIDEBAR_FILE="docs/.vitepress/sidebar-generated.json"
+CHANGELOG_FILE="docs/changelog-data.json"
 TMPDIR_SIDEBAR=$(mktemp -d)
+
+# 初始化 changelog JSON（如果不存在）
+if [ ! -f "$CHANGELOG_FILE" ]; then
+  echo '{}' > "$CHANGELOG_FILE"
+fi
 
 echo "=== Syncing docs from GitHub repos ==="
 
@@ -39,27 +45,141 @@ for item in data.get('tree', []):
 " 2>/dev/null
 }
 
-# 下載單一檔案
-download_file() {
+# 下載單一檔案到暫存，回傳暫存路徑
+download_to_tmp() {
   local repo=$1
   local branch=$2
   local src=$3
-  local dest=$4
+  local tmp_file=$(mktemp)
 
-  mkdir -p "$(dirname "$dest")"
   local url="https://raw.githubusercontent.com/$GITHUB_USER/$repo/$branch/$src"
   local auth_opts=""
   if [ -n "$GITHUB_TOKEN" ]; then
     auth_opts="-H \"Authorization: token $GITHUB_TOKEN\""
   fi
-  local status=$(eval curl -s $auth_opts -o "$dest" -w "%{http_code}" "$url")
+  local status=$(eval curl -s $auth_opts -o "$tmp_file" -w "%{http_code}" "$url")
 
   if [ "$status" = "200" ]; then
+    echo "$tmp_file"
     return 0
   else
-    rm -f "$dest"
+    rm -f "$tmp_file"
     return 1
   fi
+}
+
+# 比對新舊檔案並記錄變更到 changelog JSON
+record_diff() {
+  local dest=$1       # 現有檔案路徑
+  local tmp_file=$2   # 新下載的暫存檔
+  local doc_key=$3    # changelog key（如 starters/common-log-spring-boot-starter）
+
+  python3 << PYSCRIPT
+import json, os, subprocess, re
+from datetime import datetime
+
+dest = "$dest"
+tmp_file = "$tmp_file"
+doc_key = "$doc_key"
+changelog_file = "$CHANGELOG_FILE"
+
+# 讀取現有 changelog
+with open(changelog_file, 'r') as f:
+    changelog = json.load(f)
+
+today = datetime.now().strftime('%Y-%m-%d')
+
+if not os.path.exists(dest):
+    # 新檔案
+    entry = {
+        "date": today,
+        "summary": "新增文件",
+        "linesAdded": sum(1 for _ in open(tmp_file)),
+        "linesRemoved": 0,
+        "changeType": "new"
+    }
+else:
+    # 比對差異
+    result = subprocess.run(
+        ['diff', '--unified=0', dest, tmp_file],
+        capture_output=True, text=True
+    )
+    if result.returncode == 0:
+        # 沒有差異，跳過
+        exit(0)
+
+    diff_output = result.stdout
+    added = 0
+    removed = 0
+    changed_headings = []
+
+    for line in diff_output.split('\n'):
+        if line.startswith('+') and not line.startswith('+++'):
+            added += 1
+            # 抓新增的標題
+            m = re.match(r'^\+#{1,3}\s+(.+)', line)
+            if m:
+                changed_headings.append(m.group(1).strip())
+        elif line.startswith('-') and not line.startswith('---'):
+            removed += 1
+
+    if changed_headings:
+        summary = '更新: ' + ', '.join(changed_headings[:3])
+        if len(changed_headings) > 3:
+            summary += f' 等 {len(changed_headings)} 個章節'
+    else:
+        summary = f'+{added}/-{removed} 行變更'
+
+    entry = {
+        "date": today,
+        "summary": summary,
+        "linesAdded": added,
+        "linesRemoved": removed,
+        "changeType": "content"
+    }
+
+# 避免同一天重複記錄（覆蓋當天的）
+entries = changelog.get(doc_key, [])
+if entries and entries[0].get('date') == today:
+    entries[0] = entry
+else:
+    entries.insert(0, entry)
+
+# 最多保留 10 筆
+changelog[doc_key] = entries[:10]
+
+with open(changelog_file, 'w') as f:
+    json.dump(changelog, f, ensure_ascii=False, indent=2)
+
+# 回傳 1 表示有變更
+exit(1)
+PYSCRIPT
+}
+
+# 下載單一檔案（含 diff 記錄）
+download_file() {
+  local repo=$1
+  local branch=$2
+  local src=$3
+  local dest=$4
+  local doc_key=$5  # changelog key
+
+  mkdir -p "$(dirname "$dest")"
+
+  local tmp_file
+  tmp_file=$(download_to_tmp "$repo" "$branch" "$src")
+  if [ $? -ne 0 ]; then
+    return 1
+  fi
+
+  # 記錄 diff（如果有 doc_key）
+  if [ -n "$doc_key" ]; then
+    record_diff "$dest" "$tmp_file" "$doc_key"
+  fi
+
+  # 覆蓋目標檔案
+  mv "$tmp_file" "$dest"
+  return 0
 }
 
 # 從 README 路徑推導顯示名稱
@@ -109,13 +229,15 @@ for entry in "${REPOS[@]}"; do
     if [ "$dir" = "." ]; then
       dest_file="$DOCS_DIR/$docs_dir/index.md"
       link_path="/$docs_dir/"
+      doc_key="$docs_dir/index"
     else
       safe_name=$(echo "$dir" | tr '/' '-')
       dest_file="$DOCS_DIR/$docs_dir/$safe_name.md"
       link_path="/$docs_dir/$safe_name"
+      doc_key="$docs_dir/$safe_name"
     fi
 
-    if download_file "$repo" "$branch" "$readme" "$dest_file"; then
+    if download_file "$repo" "$branch" "$readme" "$dest_file" "$doc_key"; then
       name=$(path_to_name "$readme")
       echo "    ✓ $name"
 
@@ -227,8 +349,10 @@ for i in range(repo_count):
     entries = parse_items(raw_items)
     if entries:
         group = build_sidebar_group(display_name, entries)
-        # 只有根 README、沒有子項目 → 直接連結，不需要收合
-        if group.get('link') and not group.get('items', []):
+        # 只有根 README、沒有其他子項目 → 直接連結，不需要收合
+        items = group.get('items', [])
+        only_root = len(items) == 0 or (len(items) == 1 and items[0].get('text') == '總覽')
+        if group.get('link') and only_root:
             unified_sidebar.append({'text': display_name, 'link': group['link']})
         else:
             unified_sidebar.append(group)
